@@ -48,19 +48,29 @@ def handle_event():
     total_points = int(job["total_points"])
     job_id = job["job_id"]
 
-    app.logger.info(f"Starting job {job_id} with {total_points} points")
+    try:
+        app.logger.info(f"Starting job {job_id} with {total_points} points")
+        doc_ref.update({
+            "status": "processing"
+        })
 
-    pi_estimate = estimate_pi(total_points)
+        pi_estimate = estimate_pi(total_points)
 
-    doc_ref.update({
-        "status": "done",
-        "pi_estimate": pi_estimate,
-        "completed_at": datetime.now(timezone.utc).isoformat()
-    })
+        doc_ref.update({
+            "status": "done",
+            "pi_estimate": pi_estimate,
+            "completed_at": datetime.now(timezone.utc).isoformat()
+        })
 
-    app.logger.info(f"Completed job {job_id}, pi={pi_estimate}")
-
-    return jsonify({"message": "processed"}), 200
+        app.logger.info(f"Completed job {job_id}, pi={pi_estimate}")
+        return jsonify({"message": "processed"}), 200
+    except Exception as exc:
+        app.logger.exception(f"Job {job_id} failed: {exc}")
+        doc_ref.update({
+            "status": "failed",
+            "completed_at": datetime.now(timezone.utc).isoformat()
+        })
+        return jsonify({"message": "processing failed"}), 500
 
 @app.get("/health")
 def health():

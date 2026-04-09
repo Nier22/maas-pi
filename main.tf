@@ -26,6 +26,8 @@ resource "google_project_service" "services" {
     "run.googleapis.com",
     "artifactregistry.googleapis.com",
     "apigateway.googleapis.com",
+    "iam.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
     "servicemanagement.googleapis.com",
     "servicecontrol.googleapis.com",
     "firestore.googleapis.com",

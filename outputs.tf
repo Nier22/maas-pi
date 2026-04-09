@@ -1,5 +1,9 @@
 output "gateway_url" {
-  value = google_api_gateway_gateway.maas_gateway.default_hostname
+  value = "https://${google_api_gateway_gateway.maas_gateway.default_hostname}"
+}
+
+output "estimate_pi_endpoint" {
+  value = "https://${google_api_gateway_gateway.maas_gateway.default_hostname}/estimate_pi"
 }
 
 output "api_service_url" {
